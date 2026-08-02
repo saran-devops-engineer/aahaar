@@ -32,6 +32,11 @@ const PreferencesSettingsPage = lazy(() =>
     default: m.PreferencesSettingsPage,
   })),
 )
+const InstallSettingsPage = lazy(() =>
+  import('@/features/settings/InstallSettingsPage').then((m) => ({
+    default: m.InstallSettingsPage,
+  })),
+)
 
 interface AppRouterProps {
   user: User | null
@@ -125,6 +130,14 @@ export function AppRouter({
                 element={
                   <Suspense fallback={<RouteFallback />}>
                     <PreferencesSettingsPage profile={profile} />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="settings/install"
+                element={
+                  <Suspense fallback={<RouteFallback />}>
+                    <InstallSettingsPage />
                   </Suspense>
                 }
               />

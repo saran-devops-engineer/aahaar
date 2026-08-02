@@ -1,5 +1,6 @@
 import { AppProviders } from '@/app/providers/AppProviders'
 import { AppRouter } from '@/app/router'
+import { InstallWelcomeGate } from '@/features/install/InstallWelcomeGate'
 import { useBootstrap } from '@/hooks/useBootstrap'
 import { APP_NAME } from '@/config/constants'
 import { SkipLink } from '@/shared/components/SkipLink'
@@ -44,12 +45,14 @@ export default function App() {
 
   return (
     <AppProviders>
-      <AppRouter
-        user={user}
-        profile={profile}
-        onOnboardingComplete={refresh}
-        onProfileChange={refresh}
-      />
+      <InstallWelcomeGate>
+        <AppRouter
+          user={user}
+          profile={profile}
+          onOnboardingComplete={refresh}
+          onProfileChange={refresh}
+        />
+      </InstallWelcomeGate>
     </AppProviders>
   )
 }

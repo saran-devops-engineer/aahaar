@@ -30,6 +30,11 @@ const LINKS = [
     title: 'Preferences',
     subtitle: 'Allergies, restrictions, budget',
   },
+  {
+    to: '/settings/install',
+    title: 'Install app',
+    subtitle: 'Android install or iOS Add to Home Screen',
+  },
 ]
 
 export function SettingsPage({ profile }: SettingsPageProps) {

@@ -3,6 +3,7 @@ import { expect, test, type Page } from '@playwright/test'
 async function resetApp(page: Page) {
   await page.goto('/')
   await page.evaluate(async () => {
+    localStorage.removeItem('aahaar.installPromptDismissedAt')
     await new Promise<void>((resolve, reject) => {
       const request = indexedDB.deleteDatabase('aahaar')
       request.onsuccess = () => resolve()
@@ -11,7 +12,16 @@ async function resetApp(page: Page) {
     })
   })
   await page.reload()
-  await expect(page.getByTestId('onboarding-panel')).toBeVisible({ timeout: 15_000 })
+
+  const continueInstall = page.getByTestId('continue-without-install')
+  const onboarding = page.getByTestId('onboarding-panel')
+  await expect(continueInstall.or(onboarding)).toBeVisible({ timeout: 20_000 })
+
+  if (await continueInstall.isVisible().catch(() => false)) {
+    await continueInstall.click()
+  }
+
+  await expect(onboarding).toBeVisible({ timeout: 15_000 })
 }
 
 async function completeOnboarding(page: Page) {
