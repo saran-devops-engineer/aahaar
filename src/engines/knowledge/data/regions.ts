@@ -1,0 +1,26 @@
+import type { Region } from '@/types/domain'
+
+export const REGION_RECORDS: Region[] = [
+  { id: 'IN-AP', stateCode: 'AP', name: 'Andhra Pradesh', nameHi: 'आंध्र प्रदेश' },
+  { id: 'IN-AS', stateCode: 'AS', name: 'Assam', nameHi: 'असम' },
+  { id: 'IN-BR', stateCode: 'BR', name: 'Bihar', nameHi: 'बिहार' },
+  { id: 'IN-CT', stateCode: 'CT', name: 'Chhattisgarh', nameHi: 'छत्तीसगढ़' },
+  { id: 'IN-DL', stateCode: 'DL', name: 'Delhi', nameHi: 'दिल्ली' },
+  { id: 'IN-GA', stateCode: 'GA', name: 'Goa', nameHi: 'गोवा' },
+  { id: 'IN-GJ', stateCode: 'GJ', name: 'Gujarat', nameHi: 'गुजरात' },
+  { id: 'IN-HR', stateCode: 'HR', name: 'Haryana', nameHi: 'हरियाणा' },
+  { id: 'IN-HP', stateCode: 'HP', name: 'Himachal Pradesh', nameHi: 'हिमाचल प्रदेश' },
+  { id: 'IN-JH', stateCode: 'JH', name: 'Jharkhand', nameHi: 'झारखंड' },
+  { id: 'IN-KA', stateCode: 'KA', name: 'Karnataka', nameHi: 'कर्नाटक' },
+  { id: 'IN-KL', stateCode: 'KL', name: 'Kerala', nameHi: 'केरल' },
+  { id: 'IN-MP', stateCode: 'MP', name: 'Madhya Pradesh', nameHi: 'मध्य प्रदेश' },
+  { id: 'IN-MH', stateCode: 'MH', name: 'Maharashtra', nameHi: 'महाराष्ट्र' },
+  { id: 'IN-OD', stateCode: 'OD', name: 'Odisha', nameHi: 'ओडिशा' },
+  { id: 'IN-PB', stateCode: 'PB', name: 'Punjab', nameHi: 'पंजाब' },
+  { id: 'IN-RJ', stateCode: 'RJ', name: 'Rajasthan', nameHi: 'राजस्थान' },
+  { id: 'IN-TN', stateCode: 'TN', name: 'Tamil Nadu', nameHi: 'तमिलनाडु' },
+  { id: 'IN-TS', stateCode: 'TS', name: 'Telangana', nameHi: 'तेलंगाना' },
+  { id: 'IN-UP', stateCode: 'UP', name: 'Uttar Pradesh', nameHi: 'उत्तर प्रदेश' },
+  { id: 'IN-UK', stateCode: 'UK', name: 'Uttarakhand', nameHi: 'उत्तराखंड' },
+  { id: 'IN-WB', stateCode: 'WB', name: 'West Bengal', nameHi: 'पश्चिम बंगाल' },
+]
