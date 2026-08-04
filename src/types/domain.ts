@@ -227,6 +227,10 @@ export interface NutritionTargets {
   adjustmentNotes: string[]
 }
 
+/**
+ * @deprecated Use `UserContext` from `@/engines/context`.
+ * Decision Engine no longer accepts this shape.
+ */
 export interface DecisionContext {
   profile: Profile
   conditions: MedicalConditionId[]
@@ -238,9 +242,7 @@ export interface DecisionContext {
   budgetTier: CostTier
   schedule: Partial<Record<MealType, boolean>>
   date: string
-  /** Soft-avoid these foods for weekly variety (still usable if pool is tiny). */
   excludeFoodIds?: string[]
-  /** Changes top-N pick rotation when regenerating plans. */
   varietySeed?: number
 }
 

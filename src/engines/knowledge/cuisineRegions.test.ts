@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest'
+import { buildUserContext } from '@/engines/context'
 import { decide } from '@/engines/decision'
 import { isCuisineCompatible, isWheatRotiMeal } from '@/engines/knowledge/cuisineRegions'
 import { FOOD_CATALOG } from '@/engines/knowledge/data/foods'
-import type { DecisionContext, Profile } from '@/types/domain'
+import type { Profile } from '@/types/domain'
 
 const apProfile: Profile = {
   id: 'p-ap',
@@ -33,26 +34,17 @@ describe('Andhra regional cuisine mapping', () => {
   })
 
   it('never picks roti lunch for Nellore Andhra across variety seeds', () => {
-    const base: Omit<DecisionContext, 'varietySeed'> = {
-      profile: apProfile,
-      conditions: [],
-      preferences: {},
-      regionStateCode: 'AP',
-      districtId: 'ap-sri-potti-sriramulu-nellore',
-      season: 'summer',
-      pantryFoodIds: [],
-      budgetTier: 3,
-      schedule: {
-        breakfast: true,
-        lunch: true,
-        snack: true,
-        dinner: true,
-      },
-      date: '2026-08-04',
-    }
-
     for (const varietySeed of [1, 7, 13, 21, 42, 77, 99]) {
-      const result = decide({ ...base, varietySeed }, FOOD_CATALOG)
+      const context = buildUserContext({
+        profile: apProfile,
+        date: '2026-08-04',
+        conditions: [],
+        preferences: {},
+        budgetTier: 3,
+        season: 'summer',
+        varietySeed,
+      })
+      const result = decide(context, FOOD_CATALOG)
       const lunch = result.meals.find((m) => m.mealType === 'lunch')
       const dinner = result.meals.find((m) => m.mealType === 'dinner')
       expect(lunch).toBeTruthy()
@@ -68,27 +60,16 @@ describe('Andhra regional cuisine mapping', () => {
   })
 
   it('prefers Andhra-tagged rice meals in top lunch ranks for Nellore', () => {
-    const result = decide(
-      {
-        profile: apProfile,
-        conditions: [],
-        preferences: {},
-        regionStateCode: 'AP',
-        districtId: 'ap-sri-potti-sriramulu-nellore',
-        season: 'summer',
-        pantryFoodIds: [],
-        budgetTier: 3,
-        schedule: {
-          breakfast: true,
-          lunch: true,
-          snack: true,
-          dinner: true,
-        },
-        date: '2026-08-04',
-        varietySeed: 3,
-      },
-      FOOD_CATALOG,
-    )
+    const context = buildUserContext({
+      profile: apProfile,
+      date: '2026-08-04',
+      conditions: [],
+      preferences: {},
+      budgetTier: 3,
+      season: 'summer',
+      varietySeed: 3,
+    })
+    const result = decide(context, FOOD_CATALOG)
     const lunchId = result.meals.find((m) => m.mealType === 'lunch')?.foodId
     const lunchFood = FOOD_CATALOG.find((f) => f.id === lunchId)
     expect(lunchFood?.stateCodes.includes('AP') || lunchFood?.stateCodes.length === 0).toBe(true)

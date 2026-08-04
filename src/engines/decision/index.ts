@@ -1,56 +1,66 @@
+import {
+  selectAllergens,
+  selectAvailableMeals,
+  selectBudgetTier,
+  selectConditions,
+  selectDistrictId,
+  selectExcludeFoodIds,
+  selectFoodPreference,
+  selectNutritionTargets,
+  selectPantryFoodIds,
+  selectPreferLowGi,
+  selectReligiousRestrictions,
+  selectSeason,
+  selectStateCode,
+  selectVarietySeed,
+} from '@/engines/context'
+import type { UserContext } from '@/engines/context'
 import { filterByBudget, filterByRegion, filterBySeason } from '@/engines/knowledge'
-import { calculateNutritionTargets } from '@/engines/nutrition'
 import { pickFromTopRanked, rankFoodsForMeal } from '@/engines/recommendation'
 import { filterFoodsByConstraints } from '@/engines/rules'
-import type {
-  DecisionContext,
-  DecisionResult,
-  Food,
-  MealType,
-} from '@/types/domain'
+import type { DecisionResult, Food, MealType } from '@/types/domain'
 
 const MEAL_ORDER: MealType[] = ['breakfast', 'lunch', 'snack', 'dinner']
 
 /**
  * Decision Engine — single entry point for recommendations.
- * Flow: Knowledge filters → Nutrition → Rules → Recommendation → explainable result.
+ * Consumes immutable UserContext only — never fetches profile/preferences/storage.
  * AI Adapter is never consulted for nutrition values.
  */
-export function decide(
-  context: DecisionContext,
-  foods: Food[],
-): DecisionResult {
-  const targets = calculateNutritionTargets(context.profile, context.conditions)
+export function decide(context: UserContext, foods: Food[]): DecisionResult {
+  const targets = selectNutritionTargets(context)
+  const season = selectSeason(context)
+  const stateCode = selectStateCode(context)
+  const districtId = selectDistrictId(context)
+  const budgetTier = selectBudgetTier(context)
+  const conditions = selectConditions(context)
+  const foodPreference = selectFoodPreference(context)
+  const allergens = [...selectAllergens(context)]
+  const religiousRestrictions = [...selectReligiousRestrictions(context)]
+  const pantryFoodIds = [...selectPantryFoodIds(context)]
+  const excludeFoodIds = [...selectExcludeFoodIds(context)]
+  const availableMeals = selectAvailableMeals(context)
+  const varietySeed = selectVarietySeed(context)
+  const preferLowGi = selectPreferLowGi(context)
 
-  const seasonal = filterBySeason(foods, context.season)
-  const regional = filterByRegion(
-    seasonal,
-    context.regionStateCode,
-    context.districtId,
-  )
-  const affordable = filterByBudget(regional, context.budgetTier)
-  // Wider fallback when a region has few meals for a slot.
-  const nationalAffordable = filterByBudget(
-    filterBySeason(foods, context.season),
-    context.budgetTier,
-  )
-
-  const allergens = parseList(context.preferences.allergens)
-  const religiousRestrictions = parseList(context.preferences.religious)
+  const seasonal = filterBySeason(foods, season)
+  const regional = filterByRegion(seasonal, stateCode, districtId)
+  const affordable = filterByBudget(regional, budgetTier)
+  const nationalAffordable = filterByBudget(filterBySeason(foods, season), budgetTier)
 
   const { allowed, limited, blocked, evaluations } = filterFoodsByConstraints(
     affordable,
     {
-      conditions: context.conditions,
-      foodPreference: context.profile.foodPreference,
+      conditions: [...conditions],
+      foodPreference,
       allergens,
       religiousRestrictions,
     },
   )
 
   const nationalFiltered = filterFoodsByConstraints(nationalAffordable, {
-    conditions: context.conditions,
-    foodPreference: context.profile.foodPreference,
+    conditions: [...conditions],
+    foodPreference,
     allergens,
     religiousRestrictions,
   })
@@ -60,24 +70,21 @@ export function decide(
     nationalFiltered.allowed.length > 0
       ? nationalFiltered.allowed
       : nationalFiltered.limited
-  const excluded = new Set(context.excludeFoodIds ?? [])
+  const excluded = new Set(excludeFoodIds)
   const appliedRuleIds = [...new Set(evaluations.map((e) => e.ruleId))]
   const sources: string[] = [
+    'context-engine',
     'knowledge-base',
     'nutrition-engine',
     'rule-engine',
     'recommendation-engine',
   ]
 
-  const preferLowGi =
-    context.conditions.includes('diabetes') || context.conditions.includes('pcos')
-
   const usedFoodIds = new Set<string>()
   const meals: DecisionResult['meals'] = []
-  const varietySeed = context.varietySeed ?? hashSeed(context.date)
 
   for (const mealType of MEAL_ORDER) {
-    if (context.schedule[mealType] === false) continue
+    if (availableMeals[mealType] === false) continue
 
     let pool = widenPoolForMeal(basePool, nationalPool, mealType, excluded)
     const fresh = pool.filter((food) => !excluded.has(food.id) && !usedFoodIds.has(food.id))
@@ -85,16 +92,16 @@ export function decide(
 
     const ranked = rankFoodsForMeal(pool, {
       mealType,
-      stateCode: context.regionStateCode,
-      districtId: context.districtId,
-      season: context.season,
-      foodPreference: context.profile.foodPreference,
+      stateCode,
+      districtId,
+      season,
+      foodPreference,
       targetCalories: targets.mealSplit[mealType],
-      maxCostTier: context.budgetTier,
-      pantryFoodIds: context.pantryFoodIds,
+      maxCostTier: budgetTier,
+      pantryFoodIds,
       preferRegional: true,
       preferLowGi,
-      recentFoodIds: context.excludeFoodIds,
+      recentFoodIds: excludeFoodIds,
     })
 
     const pick = pickFromTopRanked(
@@ -182,21 +189,4 @@ function buildExplanation(
     parts.push(adjustmentNotes[0]!)
   }
   return parts.join(' — ')
-}
-
-function parseList(value: string | undefined): string[] {
-  if (!value) return []
-  return value
-    .split(',')
-    .map((part) => part.trim())
-    .filter(Boolean)
-}
-
-function hashSeed(input: string): number {
-  let hash = 2166136261
-  for (let i = 0; i < input.length; i += 1) {
-    hash ^= input.charCodeAt(i)
-    hash = Math.imul(hash, 16777619)
-  }
-  return hash >>> 0
 }

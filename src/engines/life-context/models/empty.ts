@@ -1,0 +1,90 @@
+import { LIFE_CONTEXT_VERSION } from '@/engines/life-context/constants'
+import type { LifeContext } from '@/engines/life-context/types'
+
+export function createEmptyLifeContext(now = new Date()): LifeContext {
+  const y = now.getFullYear()
+  const m = String(now.getMonth() + 1).padStart(2, '0')
+  const d = String(now.getDate()).padStart(2, '0')
+  const h = String(now.getHours()).padStart(2, '0')
+  const min = String(now.getMinutes()).padStart(2, '0')
+  const days = [
+    'sunday',
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+  ] as const
+
+  return Object.freeze({
+    version: LIFE_CONTEXT_VERSION,
+    timestamp: now.toISOString(),
+    currentDate: `${y}-${m}-${d}`,
+    currentTime: `${h}:${min}`,
+    dayOfWeek: days[now.getDay()]!,
+    season: 'all',
+    temperature: null,
+    weather: null,
+    humidity: null,
+    festival: null,
+    holiday: null,
+    workingDay: null,
+    travelMode: null,
+    officeMode: null,
+    homeMode: null,
+    availableCookingTime: null,
+    mealPreparationWindow: null,
+    budgetStatus: 'unknown',
+    salaryCycle: 'unknown',
+    pantryStatus: 'unknown',
+    shoppingStatus: 'unknown',
+    sleepQuality: 'unknown',
+    stressLevel: 'unknown',
+    activityLevel: null,
+    hydrationStatus: 'unknown',
+    familyMode: null,
+    guestMode: null,
+    leftovers: Object.freeze([]),
+    marketAvailability: 'unknown',
+    placeholders: Object.freeze({
+      wearables: null,
+      glucose: null,
+      bloodPressure: null,
+      heartRate: null,
+      airQuality: null,
+      locationAccuracy: 'none' as const,
+    }),
+    providersUsed: Object.freeze([]),
+    missingFields: Object.freeze([
+      'temperature',
+      'weather',
+      'humidity',
+      'festival',
+      'holiday',
+      'workingDay',
+      'travelMode',
+      'officeMode',
+      'homeMode',
+      'availableCookingTime',
+      'mealPreparationWindow',
+      'budgetStatus',
+      'salaryCycle',
+      'pantryStatus',
+      'shoppingStatus',
+      'sleepQuality',
+      'stressLevel',
+      'activityLevel',
+      'hydrationStatus',
+      'familyMode',
+      'guestMode',
+      'marketAvailability',
+      'wearables',
+      'glucose',
+      'bloodPressure',
+      'heartRate',
+      'airQuality',
+      'locationAccuracy',
+    ]),
+  })
+}

@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
+import { buildUserContext } from '@/engines/context'
 import { decide } from '@/engines/decision'
 import { FOOD_CATALOG } from '@/engines/knowledge/data/foods'
-import type { DecisionContext, Profile } from '@/types/domain'
+import type { Profile } from '@/types/domain'
 
 const profile: Profile = {
   id: 'p1',
@@ -21,51 +22,35 @@ const profile: Profile = {
 
 describe('decision engine', () => {
   it('returns explainable meals with nutrition targets from catalog', () => {
-    const context: DecisionContext = {
+    const context = buildUserContext({
       profile,
+      date: '2026-08-02',
       conditions: [],
       preferences: {},
-      regionStateCode: 'MH',
-      districtId: 'mh-mumbai',
-      season: 'summer',
-      pantryFoodIds: [],
       budgetTier: 3,
-      schedule: {
-        breakfast: true,
-        lunch: true,
-        snack: true,
-        dinner: true,
-      },
-      date: '2026-08-02',
-    }
+      season: 'summer',
+      varietySeed: 1,
+    })
 
     const result = decide(context, FOOD_CATALOG)
     expect(result.targets.calories).toBeGreaterThan(1000)
     expect(result.meals.length).toBeGreaterThanOrEqual(3)
-    expect(result.sources).toContain('knowledge-base')
+    expect(result.sources).toContain('context-engine')
     expect(result.candidateFoodCount).toBeGreaterThan(0)
     expect(result.meals.every((m) => m.explanation.length > 0)).toBe(true)
     expect(result.meals.every((m) => m.score > 0)).toBe(true)
   })
 
   it('blocks high-sodium regional foods for hypertension', () => {
-    const context: DecisionContext = {
+    const context = buildUserContext({
       profile,
+      date: '2026-08-02',
       conditions: ['hypertension'],
       preferences: {},
-      regionStateCode: 'MH',
-      districtId: 'mh-pune',
-      season: 'monsoon',
-      pantryFoodIds: [],
       budgetTier: 3,
-      schedule: {
-        breakfast: true,
-        lunch: true,
-        snack: true,
-        dinner: true,
-      },
-      date: '2026-08-02',
-    }
+      season: 'monsoon',
+      varietySeed: 1,
+    })
 
     const result = decide(context, FOOD_CATALOG)
     const foodIds = result.meals.map((m) => m.foodId)
@@ -75,23 +60,15 @@ describe('decision engine', () => {
   })
 
   it('respects allergen preferences', () => {
-    const context: DecisionContext = {
-      profile,
+    const context = buildUserContext({
+      profile: { ...profile, stateCode: 'TN', districtId: 'tn-chennai' },
+      date: '2026-08-02',
       conditions: [],
       preferences: { allergens: 'dairy' },
-      regionStateCode: 'TN',
-      districtId: 'tn-chennai',
-      season: 'summer',
-      pantryFoodIds: [],
       budgetTier: 3,
-      schedule: {
-        breakfast: true,
-        lunch: true,
-        snack: true,
-        dinner: true,
-      },
-      date: '2026-08-02',
-    }
+      season: 'summer',
+      varietySeed: 1,
+    })
 
     const result = decide(context, FOOD_CATALOG)
     expect(result.meals.map((m) => m.foodId)).not.toContain('food-curd-rice')
@@ -99,26 +76,19 @@ describe('decision engine', () => {
   })
 
   it('rotates among balanced candidates when variety seed changes', () => {
-    const base: Omit<DecisionContext, 'varietySeed'> = {
-      profile,
-      conditions: [],
-      preferences: {},
-      regionStateCode: 'MH',
-      districtId: 'mh-mumbai',
-      season: 'summer',
-      pantryFoodIds: [],
-      budgetTier: 3,
-      schedule: {
-        breakfast: true,
-        lunch: true,
-        snack: true,
-        dinner: true,
-      },
-      date: '2026-08-02',
-    }
-
     const mealsBySeed = [11, 29, 47, 83, 101].map((varietySeed) =>
-      decide({ ...base, varietySeed }, FOOD_CATALOG).meals.map((m) => m.foodId),
+      decide(
+        buildUserContext({
+          profile,
+          date: '2026-08-02',
+          conditions: [],
+          preferences: {},
+          budgetTier: 3,
+          season: 'summer',
+          varietySeed,
+        }),
+        FOOD_CATALOG,
+      ).meals.map((m) => m.foodId),
     )
     const uniqueBreakfasts = new Set(mealsBySeed.map((ids) => ids[0]))
     expect(FOOD_CATALOG.length).toBeGreaterThan(60)

@@ -1,3 +1,4 @@
+import { buildUserContext } from '@/engines/context'
 import { decide } from '@/engines/decision'
 import { currentSeason, getAllFoods } from '@/engines/knowledge'
 import { db } from '@/database/db'
@@ -5,7 +6,6 @@ import { getConditionIdsForUser } from '@/services/conditionService'
 import {
   getBudgetTier,
   getPreferencesForUser,
-  parsePreferenceList,
 } from '@/services/preferenceService'
 import { createId } from '@/shared/utils/id'
 import {
@@ -82,33 +82,27 @@ export async function generateDayPlan(
   const plan = await getOrCreateWeekPlan(profile.userId, weekStart)
 
   const weekMeals = await getMealsForWeek(profile.userId, weekStart)
+  const recentFoodIds = weekMeals.filter((m) => m.date !== date).map((m) => m.foodId)
   const excludeFoodIds = [
     ...(options?.excludeFoodIds ?? []),
-    ...weekMeals.filter((m) => m.date !== date).map((m) => m.foodId),
+    ...recentFoodIds,
   ]
 
-  const decision = decide(
-    {
-      profile,
-      conditions: resolvedConditions,
-      preferences,
-      regionStateCode: profile.stateCode,
-      districtId: profile.districtId,
-      season: currentSeason(new Date(`${date}T12:00:00`).getMonth() + 1),
-      pantryFoodIds: parsePreferenceList(preferences.pantry),
-      budgetTier,
-      schedule: {
-        breakfast: true,
-        lunch: true,
-        snack: true,
-        dinner: true,
-      },
-      date,
-      excludeFoodIds,
-      varietySeed: options?.varietySeed ?? Date.now(),
-    },
-    foods,
-  )
+  // Storage I/O stays in the service; Context Engine remains pure.
+  const userContext = buildUserContext({
+    profile,
+    date,
+    conditions: resolvedConditions,
+    preferences,
+    budgetTier,
+    season: currentSeason(new Date(`${date}T12:00:00`).getMonth() + 1),
+    excludeFoodIds,
+    recentFoodIds,
+    varietySeed: options?.varietySeed ?? Date.now(),
+    timestamp: new Date().toISOString(),
+  })
+
+  const decision = decide(userContext, foods)
 
   const now = new Date().toISOString()
   const meals: Meal[] = decision.meals.map((m) => ({

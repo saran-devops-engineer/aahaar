@@ -24,6 +24,12 @@ export interface RankOptions {
   preferLowGi?: boolean
   /** Soft-penalize these for weekly / regenerate variety. */
   recentFoodIds?: string[]
+  /**
+   * Optional Adaptive Learning deltas (foodId → score).
+   * Cold start / omitted map leaves ranking unchanged.
+   * Never encodes medical overrides.
+   */
+  learningAdjustments?: ReadonlyMap<string, number>
 }
 
 /**
@@ -154,6 +160,16 @@ function scoreFood(food: Food, options: RankOptions): RankedFood {
   if (options.recentFoodIds?.includes(food.id)) {
     score -= 35
     reasons.push('Already used recently')
+  }
+
+  const learningDelta = options.learningAdjustments?.get(food.id)
+  if (learningDelta) {
+    score += learningDelta
+    reasons.push(
+      learningDelta > 0
+        ? `Learning preference (+${learningDelta})`
+        : `Learning preference (${learningDelta})`,
+    )
   }
 
   return { food, score, reasons }

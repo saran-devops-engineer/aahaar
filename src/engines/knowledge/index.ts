@@ -12,6 +12,24 @@ export { syncKnowledgeBase, FOOD_CATALOG_VERSION } from '@/engines/knowledge/cat
 export { FOOD_CATALOG } from '@/engines/knowledge/data/foods'
 export { REGION_RECORDS } from '@/engines/knowledge/data/regions'
 export { DISTRICT_RECORDS } from '@/engines/knowledge/data/districts'
+export {
+  findFoodsByBudget,
+  findFoodsByCondition,
+  findFoodsByCuisine,
+  findFoodsByGoal,
+  findFoodsByIngredient,
+  findFoodsByMealType,
+  findFoodsByRegion,
+  findFoodsBySeason,
+  findFoodsHighInNutrient,
+  findHighProteinFoods,
+  findLowGISnacks,
+  findReplacementFoods,
+  findSimilarFoods,
+  getGraphStats,
+  getKnowledgeGraph,
+  rebuildKnowledgeGraph,
+} from '@/engines/knowledge/graph'
 
 export interface FoodQuery {
   mealType?: MealType

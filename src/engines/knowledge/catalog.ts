@@ -4,6 +4,7 @@ import {
   DISTRICT_RECORDS,
 } from '@/engines/knowledge/data/districts'
 import { FOOD_CATALOG, FOOD_CATALOG_VERSION } from '@/engines/knowledge/data/foods'
+import { rebuildKnowledgeGraph } from '@/engines/knowledge/graph/builders/registry'
 import { REGION_RECORDS } from '@/engines/knowledge/data/regions'
 import { RULE_RECORDS } from '@/engines/knowledge/data/rules'
 import { SEASON_RECORDS } from '@/engines/knowledge/data/seasons'
@@ -45,6 +46,9 @@ export async function syncKnowledgeBase(): Promise<{ version: number; foodCount:
       },
     )
   }
+
+  // Keep in-memory graph aligned with the catalog (no Dexie inside the graph engine).
+  rebuildKnowledgeGraph(FOOD_CATALOG)
 
   return {
     version: KNOWLEDGE_CATALOG_VERSION,
