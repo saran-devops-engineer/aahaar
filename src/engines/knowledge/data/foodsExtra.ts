@@ -1,0 +1,595 @@
+import type { Food } from '@/types/domain'
+
+/**
+ * Expanded regional meal catalog (curated planning estimates aligned with
+ * ICMR-NIN / IFCT-style composite dish ranges — not lab assays).
+ */
+export const FOOD_CATALOG_EXTRA: Food[] = [
+  // —— Breakfast ——
+  meal({
+    id: 'food-masala-dosa',
+    name: 'Masala Dosa with Sambar',
+    hi: 'मसाला डोसा',
+    mealTypes: ['breakfast'],
+    stateCodes: ['KA', 'TN', 'KL', 'AP', 'TS'],
+    districtIds: ['ka-bengaluru', 'tn-chennai'],
+    calories: 360, proteinG: 10, carbsG: 58, fatG: 10, fiberG: 6, sodiumMg: 520, ironMg: 2.5, gi: 60,
+    popularity: 92, prep: 35, cost: 2,
+  }),
+  meal({
+    id: 'food-ragi-dosa',
+    name: 'Ragi Dosa with Chutney',
+    hi: 'रागी डोसा',
+    mealTypes: ['breakfast'],
+    stateCodes: ['KA', 'TN', 'AP'],
+    districtIds: ['ka-mysuru'],
+    calories: 280, proteinG: 8, carbsG: 48, fatG: 6, fiberG: 7, sodiumMg: 380, ironMg: 3, ca: 80, gi: 50,
+    popularity: 78, prep: 25, cost: 1, diabetes: 'suitable',
+  }),
+  meal({
+    id: 'food-appam-stew',
+    name: 'Appam with Vegetable Stew',
+    hi: 'अप्पम स्टू',
+    mealTypes: ['breakfast', 'dinner'],
+    stateCodes: ['KL', 'TN'],
+    districtIds: ['kl-ernakulam', 'kl-thiruvananthapuram'],
+    calories: 320, proteinG: 8, carbsG: 52, fatG: 9, fiberG: 5, sodiumMg: 340, ca: 90, gi: 58,
+    popularity: 80, prep: 30, cost: 2, vegan: false, dairy: true,
+  }),
+  meal({
+    id: 'food-puttu-kadala',
+    name: 'Puttu with Kadala Curry',
+    hi: 'पुट्टु कडला',
+    mealTypes: ['breakfast'],
+    stateCodes: ['KL'],
+    districtIds: ['kl-ernakulam'],
+    calories: 380, proteinG: 14, carbsG: 62, fatG: 8, fiberG: 10, sodiumMg: 400, ironMg: 3.5, gi: 55,
+    popularity: 76, prep: 35, cost: 2,
+  }),
+  meal({
+    id: 'food-aloo-paratha',
+    name: 'Aloo Paratha with Curd',
+    hi: 'आलू पराठा',
+    mealTypes: ['breakfast'],
+    stateCodes: ['PB', 'HR', 'DL', 'UP', 'RJ'],
+    districtIds: ['pb-ludhiana', 'dl-new-delhi'],
+    calories: 420, proteinG: 12, carbsG: 58, fatG: 16, fiberG: 6, sodiumMg: 480, ironMg: 3, ca: 200, gi: 65,
+    popularity: 90, prep: 30, cost: 2, vegan: false, dairy: true, diabetes: 'limit',
+  }),
+  meal({
+    id: 'food-methi-thepla-curd',
+    name: 'Thepla with Chunda & Curd',
+    hi: 'थेपला',
+    mealTypes: ['breakfast', 'snack'],
+    stateCodes: ['GJ', 'RJ', 'MP'],
+    districtIds: ['gj-ahmedabad'],
+    calories: 340, proteinG: 10, carbsG: 48, fatG: 12, fiberG: 7, sodiumMg: 420, ironMg: 3, ca: 150, gi: 58,
+    popularity: 84, prep: 25, cost: 1, vegan: false, dairy: true,
+  }),
+  meal({
+    id: 'food-thalipeeth',
+    name: 'Thalipeeth with Curd',
+    hi: 'थालिपीठ',
+    mealTypes: ['breakfast'],
+    stateCodes: ['MH'],
+    districtIds: ['mh-pune', 'mh-mumbai', 'mh-nagpur'],
+    calories: 310, proteinG: 11, carbsG: 42, fatG: 10, fiberG: 8, sodiumMg: 360, ironMg: 3, ca: 140, gi: 52,
+    popularity: 86, prep: 25, cost: 1, vegan: false, dairy: true, diabetes: 'suitable',
+  }),
+  meal({
+    id: 'food-sabudana-khichdi',
+    name: 'Sabudana Khichdi',
+    hi: 'साबूदाना खिचड़ी',
+    mealTypes: ['breakfast', 'snack'],
+    stateCodes: ['MH', 'MP', 'GJ', 'UP'],
+    districtIds: ['mh-mumbai', 'mh-pune'],
+    calories: 360, proteinG: 6, carbsG: 68, fatG: 10, fiberG: 4, sodiumMg: 300, gi: 70,
+    popularity: 80, prep: 25, cost: 2, diabetes: 'limit',
+  }),
+  meal({
+    id: 'food-akki-roti',
+    name: 'Akki Roti with Chutney',
+    hi: 'अक्की रोटी',
+    mealTypes: ['breakfast'],
+    stateCodes: ['KA'],
+    districtIds: ['ka-mysuru', 'ka-bengaluru'],
+    calories: 300, proteinG: 7, carbsG: 52, fatG: 8, fiberG: 5, sodiumMg: 320, gi: 62,
+    popularity: 74, prep: 30, cost: 1,
+  }),
+  meal({
+    id: 'food-dhokla-breakfast',
+    name: 'Khaman Dhokla with Chutney',
+    hi: 'खमन ढोकला',
+    mealTypes: ['breakfast', 'snack'],
+    stateCodes: ['GJ', 'MH', 'RJ'],
+    districtIds: ['gj-ahmedabad', 'gj-surat'],
+    calories: 220, proteinG: 10, carbsG: 32, fatG: 5, fiberG: 4, sodiumMg: 480, ironMg: 2, gi: 45,
+    popularity: 85, prep: 20, cost: 1, diabetes: 'suitable', hypertension: 'limit',
+  }),
+  meal({
+    id: 'food-chilla-paneer',
+    name: 'Moong Chilla with Paneer Stuffing',
+    hi: 'मूंग चिल्ला',
+    mealTypes: ['breakfast', 'dinner'],
+    stateCodes: ['RJ', 'DL', 'UP', 'MP', 'HR'],
+    districtIds: ['dl-new-delhi', 'rj-jaipur'],
+    calories: 320, proteinG: 18, carbsG: 28, fatG: 14, fiberG: 6, sodiumMg: 400, ca: 220, gi: 40,
+    popularity: 82, prep: 25, cost: 2, vegan: false, dairy: true, diabetes: 'suitable',
+  }),
+  meal({
+    id: 'food-luchi-aloo',
+    name: 'Luchi with Aloo Curry',
+    hi: 'लूची आलू',
+    mealTypes: ['breakfast'],
+    stateCodes: ['WB', 'AS', 'OD'],
+    districtIds: ['wb-kolkata'],
+    calories: 450, proteinG: 8, carbsG: 58, fatG: 22, fiberG: 4, sodiumMg: 500, gi: 70,
+    popularity: 78, prep: 30, cost: 2, diabetes: 'limit', hypertension: 'limit',
+  }),
+  meal({
+    id: 'food-panta-bhat',
+    name: 'Panta Bhat with Fried Veg',
+    hi: 'पांता भात',
+    mealTypes: ['breakfast'],
+    stateCodes: ['WB', 'AS', 'OD', 'BR'],
+    districtIds: ['wb-kolkata'],
+    calories: 300, proteinG: 7, carbsG: 55, fatG: 5, fiberG: 4, sodiumMg: 280, gi: 58,
+    seasons: ['summer', 'all'],
+    popularity: 70, prep: 15, cost: 1,
+  }),
+  meal({
+    id: 'food-bread-omelette',
+    name: 'Bread Omelette with Salad',
+    hi: 'ब्रेड ऑमलेट',
+    mealTypes: ['breakfast'],
+    stateCodes: [],
+    districtIds: [],
+    calories: 340, proteinG: 16, carbsG: 32, fatG: 16, fiberG: 3, sodiumMg: 420, gi: 55,
+    popularity: 75, prep: 15, cost: 2, veg: false, vegan: false, egg: true, eggetarian: true,
+  }),
+  meal({
+    id: 'food-millet-porridge',
+    name: 'Jowar Millet Porridge',
+    hi: 'ज्वार दलिया',
+    mealTypes: ['breakfast'],
+    stateCodes: ['MH', 'KA', 'TS', 'AP', 'RJ'],
+    districtIds: [],
+    calories: 260, proteinG: 8, carbsG: 46, fatG: 4, fiberG: 8, sodiumMg: 180, ironMg: 3, gi: 50,
+    popularity: 72, prep: 20, cost: 1, diabetes: 'suitable', pcos: 'suitable',
+  }),
+
+  // —— Lunch ——
+  meal({
+    id: 'food-bisi-bele-bath',
+    name: 'Bisi Bele Bath',
+    hi: 'बिसि बेले बाथ',
+    mealTypes: ['lunch'],
+    stateCodes: ['KA'],
+    districtIds: ['ka-bengaluru', 'ka-mysuru'],
+    calories: 420, proteinG: 12, carbsG: 68, fatG: 10, fiberG: 8, sodiumMg: 520, ironMg: 3, gi: 55,
+    popularity: 88, prep: 40, cost: 2, hypertension: 'limit',
+  }),
+  meal({
+    id: 'food-lemon-rice-sundal',
+    name: 'Lemon Rice with Sundal',
+    hi: 'निम्बू चावल',
+    mealTypes: ['lunch', 'dinner'],
+    stateCodes: ['TN', 'KA', 'AP', 'TS'],
+    districtIds: ['tn-chennai', 'tn-coimbatore'],
+    calories: 380, proteinG: 12, carbsG: 64, fatG: 8, fiberG: 7, sodiumMg: 400, ironMg: 2.5, gi: 58,
+    popularity: 84, prep: 25, cost: 1,
+  }),
+  meal({
+    id: 'food-veg-biryani',
+    name: 'Vegetable Biryani with Raita',
+    hi: 'वेज बिरयानी',
+    mealTypes: ['lunch', 'dinner'],
+    stateCodes: ['TS', 'AP', 'KA', 'TN', 'MH', 'UP'],
+    districtIds: ['ts-hyderabad'],
+    calories: 480, proteinG: 12, carbsG: 72, fatG: 16, fiberG: 6, sodiumMg: 560, ca: 120, gi: 60,
+    popularity: 90, prep: 45, cost: 3, vegan: false, dairy: true, hypertension: 'limit',
+  }),
+  meal({
+    id: 'food-chole-rice',
+    name: 'Chole with Jeera Rice',
+    hi: 'छोले जीरा राइस',
+    mealTypes: ['lunch', 'dinner'],
+    stateCodes: ['PB', 'DL', 'HR', 'UP', 'RJ'],
+    districtIds: ['dl-new-delhi', 'pb-ludhiana'],
+    calories: 460, proteinG: 16, carbsG: 70, fatG: 12, fiberG: 12, sodiumMg: 480, ironMg: 4, gi: 50,
+    popularity: 88, prep: 40, cost: 2, diabetes: 'suitable',
+  }),
+  meal({
+    id: 'food-baingan-roti',
+    name: 'Baingan Bharta with Roti & Salad',
+    hi: 'बैंगन भर्ता',
+    mealTypes: ['lunch', 'dinner'],
+    stateCodes: ['PB', 'HR', 'DL', 'UP', 'MH', 'MP'],
+    districtIds: [],
+    calories: 380, proteinG: 11, carbsG: 52, fatG: 14, fiberG: 10, sodiumMg: 420, ironMg: 2, gi: 48,
+    popularity: 80, prep: 35, cost: 2, diabetes: 'suitable',
+  }),
+  meal({
+    id: 'food-fish-molee',
+    name: 'Fish Molee with Red Rice',
+    hi: 'फिश मोली',
+    mealTypes: ['lunch', 'dinner'],
+    stateCodes: ['KL'],
+    districtIds: ['kl-ernakulam'],
+    calories: 440, proteinG: 28, carbsG: 42, fatG: 16, fiberG: 4, sodiumMg: 520, gi: 50,
+    popularity: 82, prep: 35, cost: 3, veg: false, vegan: false,
+  }),
+  meal({
+    id: 'food-machher-jhol',
+    name: 'Machher Jhol with Rice',
+    hi: 'माछेर झोल',
+    mealTypes: ['lunch', 'dinner'],
+    stateCodes: ['WB', 'AS', 'OD'],
+    districtIds: ['wb-kolkata'],
+    calories: 420, proteinG: 26, carbsG: 48, fatG: 12, fiberG: 3, sodiumMg: 500, gi: 55,
+    popularity: 86, prep: 35, cost: 3, veg: false, vegan: false, hypertension: 'limit',
+  }),
+  meal({
+    id: 'food-pongal-sambar-lunch',
+    name: 'Ven Pongal with Sambar & Veg',
+    hi: 'वें पोंगल',
+    mealTypes: ['lunch', 'breakfast'],
+    stateCodes: ['TN', 'KA', 'AP'],
+    districtIds: ['tn-chennai'],
+    calories: 400, proteinG: 12, carbsG: 62, fatG: 10, fiberG: 6, sodiumMg: 480, gi: 58,
+    popularity: 83, prep: 30, cost: 1,
+  }),
+  meal({
+    id: 'food-undhiyu-roti',
+    name: 'Undhiyu with Roti',
+    hi: 'उंधियू',
+    mealTypes: ['lunch', 'dinner'],
+    stateCodes: ['GJ'],
+    districtIds: ['gj-ahmedabad', 'gj-surat'],
+    seasons: ['winter', 'all'],
+    calories: 420, proteinG: 12, carbsG: 55, fatG: 16, fiberG: 11, sodiumMg: 450, ironMg: 3, gi: 50,
+    popularity: 84, prep: 50, cost: 2,
+  }),
+  meal({
+    id: 'food-pakhala',
+    name: 'Pakhala with Badi Chura & Veg',
+    hi: 'पखाला',
+    mealTypes: ['lunch'],
+    stateCodes: ['OD'],
+    districtIds: ['od-khordha'],
+    seasons: ['summer', 'all'],
+    calories: 340, proteinG: 9, carbsG: 58, fatG: 6, fiberG: 5, sodiumMg: 320, gi: 55,
+    popularity: 78, prep: 20, cost: 1,
+  }),
+  meal({
+    id: 'food-litti-chokha',
+    name: 'Litti Chokha',
+    hi: 'लिट्टी चोखा',
+    mealTypes: ['lunch', 'dinner'],
+    stateCodes: ['BR', 'JH', 'UP'],
+    districtIds: ['br-patna'],
+    calories: 450, proteinG: 14, carbsG: 62, fatG: 16, fiberG: 9, sodiumMg: 400, ironMg: 4, gi: 55,
+    popularity: 85, prep: 45, cost: 1,
+  }),
+  meal({
+    id: 'food-dalma-rice',
+    name: 'Dalma with Rice',
+    hi: 'डलमा',
+    mealTypes: ['lunch', 'dinner'],
+    stateCodes: ['OD'],
+    districtIds: ['od-khordha'],
+    calories: 400, proteinG: 14, carbsG: 68, fatG: 6, fiberG: 9, sodiumMg: 360, ironMg: 3, gi: 52,
+    popularity: 82, prep: 35, cost: 1,
+  }),
+  meal({
+    id: 'food-veg-thali-north',
+    name: 'North Indian Veg Thali',
+    hi: 'उत्तर भारतीय थाली',
+    mealTypes: ['lunch', 'dinner'],
+    stateCodes: ['DL', 'UP', 'PB', 'HR', 'RJ', 'MP'],
+    districtIds: ['dl-new-delhi'],
+    calories: 520, proteinG: 18, carbsG: 72, fatG: 16, fiberG: 12, sodiumMg: 540, ironMg: 4, ca: 200, gi: 55,
+    popularity: 87, prep: 40, cost: 3, vegan: false, dairy: true, hypertension: 'limit',
+  }),
+  meal({
+    id: 'food-maharashtrian-thali',
+    name: 'Maharashtrian Thali',
+    hi: 'महाराष्ट्रीय थाली',
+    mealTypes: ['lunch', 'dinner'],
+    stateCodes: ['MH'],
+    districtIds: ['mh-mumbai', 'mh-pune', 'mh-nagpur'],
+    calories: 500, proteinG: 16, carbsG: 70, fatG: 14, fiberG: 11, sodiumMg: 520, ironMg: 3.5, gi: 55,
+    popularity: 89, prep: 40, cost: 2, hypertension: 'limit',
+  }),
+  meal({
+    id: 'food-kerala-sadya-light',
+    name: 'Kerala Sadya Plate (light)',
+    hi: 'केरल साध्या',
+    mealTypes: ['lunch'],
+    stateCodes: ['KL'],
+    districtIds: ['kl-thiruvananthapuram', 'kl-ernakulam'],
+    calories: 480, proteinG: 12, carbsG: 78, fatG: 12, fiberG: 10, sodiumMg: 480, gi: 58,
+    popularity: 81, prep: 45, cost: 2,
+  }),
+  meal({
+    id: 'food-pulao-raita',
+    name: 'Vegetable Pulao with Raita',
+    hi: 'वेज पुलाव',
+    mealTypes: ['lunch', 'dinner'],
+    stateCodes: [],
+    districtIds: [],
+    calories: 420, proteinG: 11, carbsG: 68, fatG: 12, fiberG: 5, sodiumMg: 400, ca: 140, gi: 60,
+    popularity: 84, prep: 30, cost: 2, vegan: false, dairy: true,
+  }),
+  meal({
+    id: 'food-sambar-idli-lunch',
+    name: 'Mini Idli in Sambar Bowl',
+    hi: 'मिनी इडली सांभर',
+    mealTypes: ['lunch', 'dinner'],
+    stateCodes: ['TN', 'KA', 'AP', 'TS'],
+    districtIds: ['tn-chennai'],
+    calories: 320, proteinG: 11, carbsG: 52, fatG: 5, fiberG: 7, sodiumMg: 500, gi: 55,
+    popularity: 80, prep: 25, cost: 1, diabetes: 'suitable', hypertension: 'limit',
+  }),
+
+  // —— Dinner ——
+  meal({
+    id: 'food-roti-dal-sabzi',
+    name: 'Roti, Dal & Mixed Sabzi',
+    hi: 'रोटी दाल सब्जी',
+    mealTypes: ['dinner', 'lunch'],
+    stateCodes: [],
+    districtIds: [],
+    calories: 440, proteinG: 16, carbsG: 62, fatG: 12, fiberG: 11, sodiumMg: 380, ironMg: 4, gi: 50,
+    popularity: 91, prep: 35, cost: 1, diabetes: 'suitable',
+  }),
+  meal({
+    id: 'food-millet-khichdi-veg',
+    name: 'Multi-Millet Khichdi with Kadhi',
+    hi: 'मिलेट खिचड़ी',
+    mealTypes: ['dinner', 'lunch'],
+    stateCodes: ['RJ', 'GJ', 'MH', 'MP', 'KA'],
+    districtIds: [],
+    calories: 380, proteinG: 14, carbsG: 58, fatG: 8, fiberG: 10, sodiumMg: 360, ironMg: 3.5, ca: 120, gi: 48,
+    popularity: 79, prep: 30, cost: 1, diabetes: 'suitable', vegan: false, dairy: true,
+  }),
+  meal({
+    id: 'food-grilled-fish-salad',
+    name: 'Grilled Fish with Millet & Salad',
+    hi: 'ग्रिल्ड फिश',
+    mealTypes: ['dinner'],
+    stateCodes: ['KL', 'TN', 'GA', 'MH', 'WB', 'OD'],
+    districtIds: [],
+    calories: 380, proteinG: 32, carbsG: 28, fatG: 14, fiberG: 5, sodiumMg: 420, gi: 40,
+    popularity: 76, prep: 30, cost: 3, veg: false, vegan: false, diabetes: 'suitable',
+  }),
+  meal({
+    id: 'food-chicken-stew-appam',
+    name: 'Chicken Stew with Appam',
+    hi: 'चिकन स्टू अप्पम',
+    mealTypes: ['dinner'],
+    stateCodes: ['KL', 'TN'],
+    districtIds: ['kl-ernakulam'],
+    calories: 420, proteinG: 28, carbsG: 42, fatG: 14, fiberG: 4, sodiumMg: 480, gi: 50,
+    popularity: 80, prep: 40, cost: 3, veg: false, vegan: false,
+  }),
+  meal({
+    id: 'food-moong-soup-roti',
+    name: 'Moong Soup with Phulka & Salad',
+    hi: 'मूंग सूप',
+    mealTypes: ['dinner'],
+    stateCodes: [],
+    districtIds: [],
+    calories: 320, proteinG: 14, carbsG: 48, fatG: 6, fiberG: 9, sodiumMg: 300, ironMg: 3, gi: 45,
+    popularity: 77, prep: 25, cost: 1, diabetes: 'suitable', elderly: 'suitable',
+  }),
+  meal({
+    id: 'food-palak-dal-roti',
+    name: 'Palak Dal with Roti',
+    hi: 'पालक दाल',
+    mealTypes: ['dinner', 'lunch'],
+    stateCodes: [],
+    districtIds: [],
+    calories: 400, proteinG: 16, carbsG: 55, fatG: 10, fiberG: 10, sodiumMg: 360, ironMg: 5, gi: 48,
+    popularity: 83, prep: 30, cost: 1, diabetes: 'suitable', pregnancy: 'suitable',
+  }),
+  meal({
+    id: 'food-egg-curry-roti',
+    name: 'Egg Curry with Roti & Salad',
+    hi: 'अंडा करी',
+    mealTypes: ['dinner', 'lunch'],
+    stateCodes: [],
+    districtIds: [],
+    calories: 420, proteinG: 22, carbsG: 40, fatG: 18, fiberG: 5, sodiumMg: 480, gi: 45,
+    popularity: 81, prep: 30, cost: 2, veg: false, vegan: false, egg: true, eggetarian: true,
+  }),
+  meal({
+    id: 'food-tofu-stir-millet',
+    name: 'Tofu Veg Stir-fry with Millet',
+    hi: 'टोफू मिलेट',
+    mealTypes: ['dinner'],
+    stateCodes: [],
+    districtIds: [],
+    calories: 360, proteinG: 18, carbsG: 42, fatG: 12, fiberG: 8, sodiumMg: 380, ca: 180, gi: 42,
+    popularity: 70, prep: 25, cost: 3, diabetes: 'suitable',
+  }),
+
+  // —— Snacks ——
+  meal({
+    id: 'food-sundal',
+    name: 'Chana Sundal',
+    hi: 'सुंदल',
+    mealTypes: ['snack'],
+    stateCodes: ['TN', 'KA', 'KL', 'AP'],
+    districtIds: ['tn-chennai'],
+    calories: 180, proteinG: 10, carbsG: 24, fatG: 5, fiberG: 7, sodiumMg: 220, ironMg: 2.5, gi: 35,
+    popularity: 82, prep: 15, cost: 1, diabetes: 'suitable',
+  }),
+  meal({
+    id: 'food-roasted-chana',
+    name: 'Roasted Chana & Jaggery',
+    hi: 'भुना चना',
+    mealTypes: ['snack'],
+    stateCodes: [],
+    districtIds: [],
+    calories: 200, proteinG: 10, carbsG: 28, fatG: 5, fiberG: 6, sodiumMg: 40, ironMg: 3, gi: 35,
+    popularity: 78, prep: 5, cost: 1, diabetes: 'suitable',
+  }),
+  meal({
+    id: 'food-khandvi',
+    name: 'Khandvi',
+    hi: 'खांडवी',
+    mealTypes: ['snack'],
+    stateCodes: ['GJ', 'MH'],
+    districtIds: ['gj-ahmedabad'],
+    calories: 190, proteinG: 8, carbsG: 22, fatG: 7, fiberG: 3, sodiumMg: 360, gi: 45,
+    popularity: 76, prep: 30, cost: 2, vegan: false, dairy: true,
+  }),
+  meal({
+    id: 'food-makhana',
+    name: 'Roasted Makhana',
+    hi: 'मखाना',
+    mealTypes: ['snack'],
+    stateCodes: ['BR', 'UP', 'MP', 'DL'],
+    districtIds: [],
+    calories: 140, proteinG: 5, carbsG: 22, fatG: 3, fiberG: 4, sodiumMg: 80, gi: 40,
+    popularity: 80, prep: 10, cost: 2, diabetes: 'suitable',
+  }),
+  meal({
+    id: 'food-coconut-water-peanuts',
+    name: 'Coconut Water with Peanuts',
+    hi: 'नारियल पानी',
+    mealTypes: ['snack'],
+    stateCodes: ['KL', 'TN', 'KA', 'AP', 'GA', 'MH'],
+    districtIds: [],
+    seasons: ['summer', 'all'],
+    calories: 160, proteinG: 6, carbsG: 18, fatG: 8, fiberG: 2, sodiumMg: 120, k: 400, gi: 35,
+    popularity: 74, prep: 2, cost: 1,
+  }),
+  meal({
+    id: 'food-moong-chaat',
+    name: 'Sprouted Moong Chaat',
+    hi: 'मूंग चाट',
+    mealTypes: ['snack', 'breakfast'],
+    stateCodes: [],
+    districtIds: [],
+    calories: 180, proteinG: 12, carbsG: 26, fatG: 3, fiberG: 8, sodiumMg: 200, ironMg: 2.5, gi: 30,
+    popularity: 81, prep: 10, cost: 1, diabetes: 'suitable',
+  }),
+  meal({
+    id: 'food-handvo',
+    name: 'Handvo Slice',
+    hi: 'हांडवो',
+    mealTypes: ['snack', 'breakfast'],
+    stateCodes: ['GJ'],
+    districtIds: ['gj-ahmedabad', 'gj-surat'],
+    calories: 220, proteinG: 9, carbsG: 28, fatG: 8, fiberG: 5, sodiumMg: 380, gi: 50,
+    popularity: 77, prep: 40, cost: 2,
+  }),
+  meal({
+    id: 'food-paneer-tikka-snack',
+    name: 'Paneer Tikka (small plate)',
+    hi: 'पनीर टिक्का',
+    mealTypes: ['snack', 'dinner'],
+    stateCodes: ['PB', 'DL', 'HR', 'UP', 'MH'],
+    districtIds: ['dl-new-delhi'],
+    calories: 240, proteinG: 16, carbsG: 10, fatG: 16, fiberG: 3, sodiumMg: 420, ca: 280, gi: 25,
+    popularity: 85, prep: 25, cost: 3, vegan: false, dairy: true, diabetes: 'suitable', hypertension: 'limit',
+  }),
+  meal({
+    id: 'food-idli-only-avoid',
+    name: 'Plain Idli with Coconut Chutney',
+    hi: 'इडली चटनी',
+    mealTypes: ['breakfast', 'snack'],
+    stateCodes: ['TN', 'KA', 'KL', 'AP', 'TS'],
+    districtIds: [],
+    calories: 220, proteinG: 6, carbsG: 40, fatG: 4, fiberG: 2, sodiumMg: 300, gi: 60,
+    popularity: 70, prep: 15, cost: 1, diabetes: 'limit',
+  }),
+]
+
+interface MealDraft {
+  id: string
+  name: string
+  hi?: string
+  mealTypes: Food['mealTypes']
+  stateCodes: string[]
+  districtIds: string[]
+  seasons?: Food['seasons']
+  calories: number
+  proteinG: number
+  carbsG: number
+  fatG: number
+  fiberG: number
+  sodiumMg?: number
+  ironMg?: number
+  ca?: number
+  k?: number
+  gi?: number
+  popularity: number
+  prep: number
+  cost: 1 | 2 | 3 | 4 | 5
+  veg?: boolean
+  vegan?: boolean
+  jain?: boolean
+  dairy?: boolean
+  egg?: boolean
+  eggetarian?: boolean
+  diabetes?: 'suitable' | 'limit' | 'avoid'
+  hypertension?: 'suitable' | 'limit' | 'avoid'
+  pcos?: 'suitable' | 'limit' | 'avoid'
+  pregnancy?: 'suitable' | 'limit' | 'avoid'
+  elderly?: 'suitable' | 'limit' | 'avoid'
+  ckd?: 'suitable' | 'limit' | 'avoid'
+}
+
+function meal(d: MealDraft): Food {
+  const isVeg = d.veg ?? true
+  const isVegan = d.vegan ?? (isVeg && !d.dairy && !d.egg)
+  const allergens: string[] = []
+  if (d.dairy) allergens.push('dairy')
+  if (d.egg) allergens.push('egg')
+
+  const medicalSuitability: Food['medicalSuitability'] = {}
+  if (d.diabetes) medicalSuitability.diabetes = d.diabetes
+  if (d.hypertension) medicalSuitability.hypertension = d.hypertension
+  if (d.pcos) medicalSuitability.pcos = d.pcos
+  if (d.pregnancy) medicalSuitability.pregnancy = d.pregnancy
+  if (d.elderly) medicalSuitability.elderly = d.elderly
+  if (d.ckd) medicalSuitability.ckd = d.ckd
+
+  return {
+    id: d.id,
+    name: d.name,
+    translations: d.hi ? { hi: d.hi } : {},
+    mealTypes: d.mealTypes,
+    stateCodes: d.stateCodes,
+    districtIds: d.districtIds,
+    seasons: d.seasons ?? ['all'],
+    category: 'meal',
+    isVeg,
+    isVegan,
+    isJain: d.jain ?? isVegan,
+    costTier: d.cost,
+    availability: 'common',
+    nutrition: {
+      calories: d.calories,
+      proteinG: d.proteinG,
+      carbsG: d.carbsG,
+      fatG: d.fatG,
+      fiberG: d.fiberG,
+      sodiumMg: d.sodiumMg,
+      ironMg: d.ironMg,
+      calciumMg: d.ca,
+      potassiumMg: d.k,
+      glycemicIndex: d.gi,
+      glycemicLoad:
+        d.gi != null ? Math.round((d.gi * d.carbsG) / 100) : undefined,
+    },
+    allergens,
+    religiousRestrictions: [],
+    medicalSuitability,
+    popularity: d.popularity,
+    prepTimeMinutes: d.prep,
+  }
+}

@@ -240,6 +240,8 @@ export interface DecisionContext {
   date: string
   /** Soft-avoid these foods for weekly variety (still usable if pool is tiny). */
   excludeFoodIds?: string[]
+  /** Changes top-N pick rotation when regenerating plans. */
+  varietySeed?: number
 }
 
 export interface DecisionResult {

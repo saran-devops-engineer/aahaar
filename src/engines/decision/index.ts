@@ -1,6 +1,6 @@
 import { filterByBudget, filterByRegion, filterBySeason } from '@/engines/knowledge'
 import { calculateNutritionTargets } from '@/engines/nutrition'
-import { rankFoodsForMeal } from '@/engines/recommendation'
+import { pickFromTopRanked, rankFoodsForMeal } from '@/engines/recommendation'
 import { filterFoodsByConstraints } from '@/engines/rules'
 import type {
   DecisionContext,
@@ -29,6 +29,11 @@ export function decide(
     context.districtId,
   )
   const affordable = filterByBudget(regional, context.budgetTier)
+  // Wider fallback when a region has few meals for a slot.
+  const nationalAffordable = filterByBudget(
+    filterBySeason(foods, context.season),
+    context.budgetTier,
+  )
 
   const allergens = parseList(context.preferences.allergens)
   const religiousRestrictions = parseList(context.preferences.religious)
@@ -43,11 +48,19 @@ export function decide(
     },
   )
 
-  // Prefer fully allowed foods; fall back to limited when necessary.
+  const nationalFiltered = filterFoodsByConstraints(nationalAffordable, {
+    conditions: context.conditions,
+    foodPreference: context.profile.foodPreference,
+    allergens,
+    religiousRestrictions,
+  })
+
   const basePool = allowed.length > 0 ? allowed : limited
+  const nationalPool =
+    nationalFiltered.allowed.length > 0
+      ? nationalFiltered.allowed
+      : nationalFiltered.limited
   const excluded = new Set(context.excludeFoodIds ?? [])
-  const freshPool = basePool.filter((food) => !excluded.has(food.id))
-  const candidatePool = freshPool.length > 0 ? freshPool : basePool
   const appliedRuleIds = [...new Set(evaluations.map((e) => e.ruleId))]
   const sources: string[] = [
     'knowledge-base',
@@ -61,11 +74,16 @@ export function decide(
 
   const usedFoodIds = new Set<string>()
   const meals: DecisionResult['meals'] = []
+  const varietySeed = context.varietySeed ?? hashSeed(context.date)
 
   for (const mealType of MEAL_ORDER) {
     if (context.schedule[mealType] === false) continue
 
-    const ranked = rankFoodsForMeal(candidatePool, {
+    let pool = widenPoolForMeal(basePool, nationalPool, mealType, excluded)
+    const fresh = pool.filter((food) => !excluded.has(food.id) && !usedFoodIds.has(food.id))
+    pool = fresh.length > 0 ? fresh : pool.filter((food) => !usedFoodIds.has(food.id))
+
+    const ranked = rankFoodsForMeal(pool, {
       mealType,
       stateCode: context.regionStateCode,
       districtId: context.districtId,
@@ -76,9 +94,15 @@ export function decide(
       pantryFoodIds: context.pantryFoodIds,
       preferRegional: true,
       preferLowGi,
-    }).filter((r) => !usedFoodIds.has(r.food.id))
+      recentFoodIds: context.excludeFoodIds,
+    })
 
-    const pick = ranked[0]
+    const pick = pickFromTopRanked(
+      ranked,
+      mealType,
+      `${varietySeed}:${context.date}:${mealType}`,
+      5,
+    )
     if (!pick) continue
 
     usedFoodIds.add(pick.food.id)
@@ -113,8 +137,27 @@ export function decide(
     appliedRuleIds,
     sources,
     blockedFoodCount: blocked.length,
-    candidateFoodCount: candidatePool.length,
+    candidateFoodCount: basePool.length,
   }
+}
+
+function widenPoolForMeal(
+  regionalPool: Food[],
+  nationalPool: Food[],
+  mealType: MealType,
+  excluded: Set<string>,
+): Food[] {
+  const regionalForMeal = regionalPool.filter(
+    (food) => food.mealTypes.includes(mealType) && !excluded.has(food.id),
+  )
+  if (regionalForMeal.length >= 6) return regionalPool
+
+  const byId = new Map<string, Food>()
+  for (const food of regionalPool) byId.set(food.id, food)
+  for (const food of nationalPool) {
+    if (food.mealTypes.includes(mealType)) byId.set(food.id, food)
+  }
+  return [...byId.values()]
 }
 
 function estimateServings(foodCalories: number, targetCalories: number): number {
@@ -147,4 +190,13 @@ function parseList(value: string | undefined): string[] {
     .split(',')
     .map((part) => part.trim())
     .filter(Boolean)
+}
+
+function hashSeed(input: string): number {
+  let hash = 2166136261
+  for (let i = 0; i < input.length; i += 1) {
+    hash ^= input.charCodeAt(i)
+    hash = Math.imul(hash, 16777619)
+  }
+  return hash >>> 0
 }

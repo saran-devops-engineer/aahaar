@@ -70,6 +70,7 @@ export async function generateDayPlan(
   options?: {
     conditions?: MedicalConditionId[]
     excludeFoodIds?: string[]
+    varietySeed?: number
   },
 ): Promise<{ plan: MealPlan; meals: Meal[]; decision: DecisionResult }> {
   const foods = await getAllFoods()
@@ -104,6 +105,7 @@ export async function generateDayPlan(
       },
       date,
       excludeFoodIds,
+      varietySeed: options?.varietySeed ?? Date.now(),
     },
     foods,
   )
@@ -146,10 +148,13 @@ export async function generateWeekPlan(
   const plan = await getOrCreateWeekPlan(profile.userId, weekStartDate)
   const allMeals: Meal[] = []
   const usedAcrossWeek: string[] = []
+  const weekSeed = Date.now()
 
-  for (const date of dates) {
+  for (let i = 0; i < dates.length; i += 1) {
+    const date = dates[i]!
     const { meals } = await generateDayPlan(profile, date, {
       excludeFoodIds: usedAcrossWeek,
+      varietySeed: weekSeed + i * 97,
     })
     allMeals.push(...meals)
     usedAcrossWeek.push(...meals.map((m) => m.foodId))

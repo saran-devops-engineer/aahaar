@@ -1,7 +1,8 @@
 import type { Food } from '@/types/domain'
+import { FOOD_CATALOG_EXTRA } from '@/engines/knowledge/data/foodsExtra'
 
 /** Catalog version — bump when foods change so seed upserts refresh. */
-export const FOOD_CATALOG_VERSION = 3
+export const FOOD_CATALOG_VERSION = 4
 
 function food(partial: Food): Food {
   return partial
@@ -11,7 +12,7 @@ function food(partial: Food): Food {
  * Normalized Indian food knowledge base (starter catalog).
  * Nutrition values are curated estimates for planning — not lab assays.
  */
-export const FOOD_CATALOG: Food[] = [
+export const FOOD_CATALOG_CORE: Food[] = [
   food({
     id: 'food-poha',
     name: 'Poha',
@@ -77,7 +78,7 @@ export const FOOD_CATALOG: Food[] = [
       hypertension: 'limit',
       elderly: 'suitable',
     },
-    popularity: 94,
+    popularity: 86,
     prepTimeMinutes: 30,
   }),
   food({
@@ -215,7 +216,7 @@ export const FOOD_CATALOG: Food[] = [
       children: 'suitable',
       elderly: 'suitable',
     },
-    popularity: 95,
+    popularity: 82,
     prepTimeMinutes: 35,
   }),
   food({
@@ -250,7 +251,7 @@ export const FOOD_CATALOG: Food[] = [
       children: 'suitable',
       elderly: 'suitable',
     },
-    popularity: 88,
+    popularity: 78,
     prepTimeMinutes: 15,
   }),
   food({
@@ -1073,3 +1074,6 @@ export const FOOD_CATALOG: Food[] = [
     prepTimeMinutes: 20,
   }),
 ]
+
+/** Full food knowledge base = core catalog + regional expansion. */
+export const FOOD_CATALOG: Food[] = [...FOOD_CATALOG_CORE, ...FOOD_CATALOG_EXTRA]

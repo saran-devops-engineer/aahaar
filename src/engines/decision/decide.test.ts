@@ -97,4 +97,31 @@ describe('decision engine', () => {
     expect(result.meals.map((m) => m.foodId)).not.toContain('food-curd-rice')
     expect(result.meals.map((m) => m.foodId)).not.toContain('food-buttermilk')
   })
+
+  it('rotates among balanced candidates when variety seed changes', () => {
+    const base: Omit<DecisionContext, 'varietySeed'> = {
+      profile,
+      conditions: [],
+      preferences: {},
+      regionStateCode: 'MH',
+      districtId: 'mh-mumbai',
+      season: 'summer',
+      pantryFoodIds: [],
+      budgetTier: 3,
+      schedule: {
+        breakfast: true,
+        lunch: true,
+        snack: true,
+        dinner: true,
+      },
+      date: '2026-08-02',
+    }
+
+    const mealsBySeed = [11, 29, 47, 83, 101].map((varietySeed) =>
+      decide({ ...base, varietySeed }, FOOD_CATALOG).meals.map((m) => m.foodId),
+    )
+    const uniqueBreakfasts = new Set(mealsBySeed.map((ids) => ids[0]))
+    expect(FOOD_CATALOG.length).toBeGreaterThan(60)
+    expect(uniqueBreakfasts.size).toBeGreaterThan(1)
+  })
 })

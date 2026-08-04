@@ -1,3 +1,4 @@
+import { analyzePlateBalance } from '@/engines/nutrition/plateBalance'
 import type { CostTier, Food, MealType, Season } from '@/types/domain'
 
 export { findSubstitutionCandidates } from '@/engines/recommendation/substitutions'
@@ -20,10 +21,12 @@ export interface RankOptions {
   pantryFoodIds: string[]
   preferRegional: boolean
   preferLowGi?: boolean
+  /** Soft-penalize these for weekly / regenerate variety. */
+  recentFoodIds?: string[]
 }
 
 /**
- * Recommendation Engine — deterministic ranking.
+ * Recommendation Engine — deterministic ranking with balance + variety.
  * AI may only add variety/explanations later; scores stay rule-based.
  */
 export function rankFoodsForMeal(foods: Food[], options: RankOptions): RankedFood[] {
@@ -57,38 +60,39 @@ function matchesPreference(food: Food, preference: RankOptions['foodPreference']
 
 function scoreFood(food: Food, options: RankOptions): RankedFood {
   const reasons: string[] = []
-  let score = food.popularity
+  // Cap popularity influence so a few staples cannot monopolize every plan.
+  let score = Math.min(food.popularity, 88) * 0.55
 
   if (options.preferRegional) {
     if (food.stateCodes.includes(options.stateCode)) {
-      score += 25
+      score += 22
       reasons.push('Regional match')
     }
     if (options.districtId && food.districtIds.includes(options.districtId)) {
-      score += 10
+      score += 8
       reasons.push('District favourite')
     }
     if (food.stateCodes.length === 0) {
-      score += 8
+      score += 10
       reasons.push('Pan-India staple')
     }
   }
 
   if (options.pantryFoodIds.includes(food.id)) {
-    score += 20
+    score += 18
     reasons.push('Uses pantry item')
   }
 
   const calorieDelta = Math.abs(food.nutrition.calories - options.targetCalories)
-  const calorieScore = Math.max(0, 30 - calorieDelta / 20)
+  const calorieScore = Math.max(0, 28 - calorieDelta / 20)
   score += calorieScore
   if (calorieDelta < 80) reasons.push('Fits meal calorie target')
 
-  score += (6 - food.costTier) * 4
+  score += (6 - food.costTier) * 3
   if (food.costTier <= 2) reasons.push('Affordable')
 
   if (food.prepTimeMinutes <= 25) {
-    score += 8
+    score += 6
     reasons.push('Quick to prepare')
   }
 
@@ -103,9 +107,73 @@ function scoreFood(food: Food, options: RankOptions): RankedFood {
   }
 
   if (options.season !== 'all' && food.seasons.includes(options.season)) {
-    score += 12
+    score += 10
     reasons.push(`In season (${options.season})`)
   }
 
+  // Macro / micronutrient balance (engine facts only).
+  const n = food.nutrition
+  const proteinDensity = n.calories > 0 ? (n.proteinG * 4) / n.calories : 0
+  if (proteinDensity >= 0.15) {
+    score += 14
+    reasons.push('Good protein share')
+  } else if (proteinDensity < 0.1) {
+    score -= 8
+  }
+
+  if (n.fiberG >= 7) {
+    score += 12
+    reasons.push('High fibre')
+  } else if (n.fiberG >= 4) {
+    score += 6
+  } else if (n.fiberG < 3 && options.mealType !== 'snack') {
+    score -= 6
+  }
+
+  const iron = n.ironMg ?? 0
+  const calcium = n.calciumMg ?? 0
+  const potassium = n.potassiumMg ?? 0
+  if (iron >= 3 || calcium >= 150 || potassium >= 400) {
+    score += 8
+    reasons.push('Micronutrient-rich')
+  }
+
+  const plate = analyzePlateBalance(food, options.mealType)
+  if (plate.isBalanced) {
+    score += 18
+    reasons.push('Balanced plate (carb + protein + veg)')
+  } else if (options.mealType !== 'snack' && plate.missingCoreRoles.length > 0) {
+    score -= 10 * plate.missingCoreRoles.length
+  }
+
+  if (options.recentFoodIds?.includes(food.id)) {
+    score -= 35
+    reasons.push('Already used recently')
+  }
+
   return { food, score, reasons }
+}
+
+/** Stable pick among top candidates for variety without inventing foods. */
+export function pickFromTopRanked(
+  ranked: RankedFood[],
+  mealType: MealType,
+  seed: string,
+  topN = 5,
+): RankedFood | undefined {
+  if (ranked.length === 0) return undefined
+  const balanced = ranked.filter((r) => analyzePlateBalance(r.food, mealType).isBalanced)
+  const poolSource = balanced.length >= 2 ? balanced : ranked
+  const pool = poolSource.slice(0, Math.min(topN, poolSource.length))
+  const index = stableIndex(seed, pool.length)
+  return pool[index]
+}
+
+function stableIndex(seed: string, modulo: number): number {
+  if (modulo <= 1) return 0
+  let hash = 0
+  for (let i = 0; i < seed.length; i += 1) {
+    hash = (hash * 31 + seed.charCodeAt(i)) >>> 0
+  }
+  return hash % modulo
 }

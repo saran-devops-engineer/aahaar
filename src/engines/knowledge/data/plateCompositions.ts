@@ -149,4 +149,80 @@ export const PLATE_COMPOSITIONS: Record<string, PlatePart[]> = {
     { name: 'Onion, tomato & spices', roles: ['vegetable'] },
     { name: 'Roti or rice', roles: ['carb'], optional: true },
   ],
+  'food-masala-dosa': [
+    { name: 'Dosa', roles: ['carb'] },
+    { name: 'Potato masala', roles: ['vegetable'] },
+    { name: 'Sambar', roles: ['protein', 'vegetable'] },
+  ],
+  'food-ragi-dosa': [
+    { name: 'Ragi dosa', roles: ['carb'] },
+    { name: 'Coconut chutney / sambar', roles: ['protein', 'vegetable'], optional: true },
+  ],
+  'food-appam-stew': [
+    { name: 'Appam', roles: ['carb'] },
+    { name: 'Vegetable stew', roles: ['vegetable', 'fat'] },
+    { name: 'Coconut milk protein', roles: ['protein'], optional: true },
+  ],
+  'food-puttu-kadala': [
+    { name: 'Puttu', roles: ['carb'] },
+    { name: 'Kadala (chickpea) curry', roles: ['protein', 'vegetable'] },
+  ],
+  'food-aloo-paratha': [
+    { name: 'Aloo paratha', roles: ['carb', 'vegetable'] },
+    { name: 'Curd', roles: ['dairy', 'protein'] },
+  ],
+  'food-thalipeeth': [
+    { name: 'Thalipeeth (multi-grain)', roles: ['carb', 'protein'] },
+    { name: 'Curd / thecha veggies', roles: ['dairy', 'vegetable'] },
+  ],
+  'food-roti-dal-sabzi': [
+    { name: 'Roti', roles: ['carb'] },
+    { name: 'Dal', roles: ['protein'] },
+    { name: 'Mixed sabzi', roles: ['vegetable'] },
+  ],
+  'food-maharashtrian-thali': [
+    { name: 'Bhakri / rice', roles: ['carb'] },
+    { name: 'Dal / amti', roles: ['protein'] },
+    { name: 'Bhaji & salad', roles: ['vegetable'] },
+  ],
+  'food-veg-thali-north': [
+    { name: 'Roti / rice', roles: ['carb'] },
+    { name: 'Dal / paneer', roles: ['protein'] },
+    { name: 'Sabzi & salad', roles: ['vegetable'] },
+  ],
+  'food-chole-rice': [
+    { name: 'Jeera rice', roles: ['carb'] },
+    { name: 'Chole', roles: ['protein'] },
+    { name: 'Onion-tomato salad', roles: ['vegetable'] },
+  ],
+  'food-lemon-rice-sundal': [
+    { name: 'Lemon rice', roles: ['carb'] },
+    { name: 'Sundal (legumes)', roles: ['protein'] },
+    { name: 'Temper vegetables', roles: ['vegetable'] },
+  ],
+  'food-bisi-bele-bath': [
+    { name: 'Rice-dal bath', roles: ['carb', 'protein'] },
+    { name: 'Mixed vegetables', roles: ['vegetable'] },
+  ],
+  'food-palak-dal-roti': [
+    { name: 'Roti', roles: ['carb'] },
+    { name: 'Palak dal', roles: ['protein', 'vegetable'] },
+  ],
+  'food-moong-soup-roti': [
+    { name: 'Phulka', roles: ['carb'] },
+    { name: 'Moong soup', roles: ['protein'] },
+    { name: 'Salad', roles: ['vegetable'] },
+  ],
+  'food-sundal': [
+    { name: 'Chana sundal', roles: ['protein', 'vegetable'] },
+  ],
+  'food-moong-chaat': [
+    { name: 'Sprouted moong', roles: ['protein'] },
+    { name: 'Onion, tomato, lemon', roles: ['vegetable'] },
+  ],
+  'food-idli-only-avoid': [
+    { name: 'Plain idli', roles: ['carb'] },
+    { name: 'Coconut chutney', roles: ['fat'] },
+    { name: 'Sambar', roles: ['protein', 'vegetable'], optional: true },
+  ],
 }
