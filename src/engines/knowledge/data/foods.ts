@@ -2,7 +2,7 @@ import type { Food } from '@/types/domain'
 import { FOOD_CATALOG_EXTRA } from '@/engines/knowledge/data/foodsExtra'
 
 /** Catalog version — bump when foods change so seed upserts refresh. */
-export const FOOD_CATALOG_VERSION = 4
+export const FOOD_CATALOG_VERSION = 5
 
 function food(partial: Food): Food {
   return partial
@@ -52,7 +52,7 @@ export const FOOD_CATALOG_CORE: Food[] = [
     translations: { hi: 'इडली सांभर', ta: 'இட்லி சாம்பார்' },
     mealTypes: ['breakfast'],
     stateCodes: ['TN', 'KA', 'KL', 'AP', 'TS'],
-    districtIds: ['tn-chennai', 'ka-bengaluru', 'ts-hyderabad'],
+    districtIds: ['tn-chennai', 'ka-bengaluru', 'ap-sri-potti-sriramulu-nellore', 'ts-hyderabad'],
     seasons: ['all'],
     category: 'fermented',
     isVeg: true,
@@ -403,7 +403,7 @@ export const FOOD_CATALOG_CORE: Food[] = [
     name: 'Roti Sabzi',
     translations: { hi: 'रोटी सब्ज़ी' },
     mealTypes: ['lunch', 'dinner'],
-    stateCodes: [],
+    stateCodes: ['PB', 'HR', 'DL', 'UP', 'UK', 'HP', 'RJ', 'MP', 'JH', 'BR'],
     districtIds: [],
     seasons: ['all'],
     category: 'meal',
@@ -430,7 +430,7 @@ export const FOOD_CATALOG_CORE: Food[] = [
       pregnancy: 'suitable',
       elderly: 'suitable',
     },
-    popularity: 96,
+    popularity: 84,
     prepTimeMinutes: 35,
   }),
   food({
@@ -474,9 +474,9 @@ export const FOOD_CATALOG_CORE: Food[] = [
     id: 'food-sambar-rice',
     name: 'Sambar Rice',
     translations: { hi: 'सांभर चावल', ta: 'சாம்பார் சாதம்' },
-    mealTypes: ['lunch'],
+    mealTypes: ['lunch', 'dinner'],
     stateCodes: ['TN', 'KA', 'KL', 'AP', 'TS'],
-    districtIds: ['tn-chennai', 'ka-mysuru'],
+    districtIds: ['tn-chennai', 'ka-mysuru', 'ap-sri-potti-sriramulu-nellore', 'ap-visakhapatnam'],
     seasons: ['all'],
     category: 'meal',
     isVeg: true,

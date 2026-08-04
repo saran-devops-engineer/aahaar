@@ -225,4 +225,48 @@ export const PLATE_COMPOSITIONS: Record<string, PlatePart[]> = {
     { name: 'Coconut chutney', roles: ['fat'] },
     { name: 'Sambar', roles: ['protein', 'vegetable'], optional: true },
   ],
+  'food-pulihora': [
+    { name: 'Pulihora (tamarind rice)', roles: ['carb'] },
+    { name: 'Dondakaya / vegetable fry', roles: ['vegetable'] },
+    { name: 'Pappu or sundal', roles: ['protein'], optional: true },
+  ],
+  'food-gongura-pappu-rice': [
+    { name: 'Rice', roles: ['carb'] },
+    { name: 'Gongura pappu', roles: ['protein', 'vegetable'] },
+    { name: 'Fry / pickle side', roles: ['vegetable'] },
+  ],
+  'food-andhra-veg-meal': [
+    { name: 'Annam (rice)', roles: ['carb'] },
+    { name: 'Pappu (dal)', roles: ['protein'] },
+    { name: 'Koora & pachadi', roles: ['vegetable'] },
+  ],
+  'food-tomato-pappu-rice': [
+    { name: 'Rice', roles: ['carb'] },
+    { name: 'Tomato pappu', roles: ['protein', 'vegetable'] },
+    { name: 'Vepudu (fry)', roles: ['vegetable'] },
+  ],
+  'food-pesarattu': [
+    { name: 'Pesarattu (moong dosa)', roles: ['protein', 'carb'] },
+    { name: 'Upma', roles: ['carb'] },
+    { name: 'Chutney', roles: ['vegetable'] },
+  ],
+  'food-pappu-charu-meal': [
+    { name: 'Rice', roles: ['carb'] },
+    { name: 'Pappu charu', roles: ['protein'] },
+    { name: 'Bendakaya / veg', roles: ['vegetable'] },
+  ],
+  'food-andhra-curd-rice': [
+    { name: 'Perugu annam', roles: ['carb', 'dairy', 'protein'] },
+    { name: 'Pickle / carrot', roles: ['vegetable'] },
+  ],
+  'food-nellore-chepala-pulusu': [
+    { name: 'Rice', roles: ['carb'] },
+    { name: 'Chepala pulusu (fish)', roles: ['protein', 'fat'] },
+    { name: 'Onion-tomato gravy veg', roles: ['vegetable'] },
+  ],
+  'food-egg-curry-rice-ap': [
+    { name: 'Rice', roles: ['carb'] },
+    { name: 'Egg curry', roles: ['protein', 'fat'] },
+    { name: 'Onion-tomato gravy', roles: ['vegetable'] },
+  ],
 }

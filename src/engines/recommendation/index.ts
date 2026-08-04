@@ -1,4 +1,5 @@
 import { analyzePlateBalance } from '@/engines/nutrition/plateBalance'
+import { isCuisineCompatible } from '@/engines/knowledge/cuisineRegions'
 import type { CostTier, Food, MealType, Season } from '@/types/domain'
 
 export { findSubstitutionCandidates } from '@/engines/recommendation/substitutions'
@@ -35,6 +36,7 @@ export function rankFoodsForMeal(foods: Food[], options: RankOptions): RankedFoo
     .filter((food) => food.costTier <= options.maxCostTier)
     .filter((food) => inSeason(food, options.season))
     .filter((food) => matchesPreference(food, options.foodPreference))
+    .filter((food) => isCuisineCompatible(food, options.stateCode, options.mealType))
     .map((food) => scoreFood(food, options))
     .sort((a, b) => b.score - a.score)
 }
@@ -65,16 +67,19 @@ function scoreFood(food: Food, options: RankOptions): RankedFood {
 
   if (options.preferRegional) {
     if (food.stateCodes.includes(options.stateCode)) {
-      score += 22
+      score += 28
       reasons.push('Regional match')
     }
     if (options.districtId && food.districtIds.includes(options.districtId)) {
-      score += 8
+      score += 12
       reasons.push('District favourite')
     }
     if (food.stateCodes.length === 0) {
-      score += 10
+      // Pan-India is a fallback, not a peer of true regional dishes.
+      score += 4
       reasons.push('Pan-India staple')
+    } else if (!food.stateCodes.includes(options.stateCode)) {
+      score -= 20
     }
   }
 
