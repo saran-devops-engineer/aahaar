@@ -15,11 +15,44 @@ describe('AI adapters', () => {
       conditions: ['diabetes'],
       regionStateCode: 'MH',
       season: 'monsoon',
+      platePartSummaries: [
+        'Poha (flattened rice) contributes carbs for energy',
+        'Peanuts contribute protein for satiety and repair',
+      ],
+      balanceVerdict:
+        'Poha covers carbs, protein, and vegetables together — that is what makes it a balanced plate.',
+      gapRecommendations: [],
     })
     expect(text).toContain('Poha')
     expect(text).toContain('250')
     expect(text).toContain('diabetes')
-    expect(text).toContain('Regional match')
+    expect(text).toContain('regional match')
+    expect(text).toContain('carbs for energy')
+    expect(text).toContain('balanced plate')
+  })
+
+  it('surfaces missing plate pieces in explanations', async () => {
+    const text = await localAiAdapter.explainRecommendation({
+      foodName: 'Roti Sabzi',
+      mealType: 'lunch',
+      servings: 1,
+      calories: 320,
+      reasons: [],
+      ruleNotes: [],
+      conditions: [],
+      regionStateCode: 'DL',
+      season: 'winter',
+      platePartSummaries: [
+        'Roti contributes carbs for energy',
+        'Sabzi (cooked vegetables) contributes vegetables for fibre and micronutrients',
+      ],
+      balanceVerdict:
+        'Roti Sabzi is a good start, but without protein it is not a fully balanced lunch.',
+      gapRecommendations: ['Include Dal or curd — it adds protein and dairy.'],
+    })
+    expect(text).toContain('Roti')
+    expect(text).toContain('protein')
+    expect(text).toContain('Dal or curd')
   })
 
   it('ranks only provided substitution candidates', async () => {

@@ -2,6 +2,7 @@ import { getAiAdapter, getAiMode, setAiMode, type AiMode } from '@/ai/adapter'
 import type { SubstitutionOption } from '@/ai/types'
 import { currentSeason, getAllFoods, getFoodById } from '@/engines/knowledge'
 import { calculateNutritionTargets } from '@/engines/nutrition'
+import { analyzePlateBalance } from '@/engines/nutrition/plateBalance'
 import { findSubstitutionCandidates } from '@/engines/recommendation'
 import { filterFoodsByConstraints } from '@/engines/rules'
 import { PREFERENCE_KEYS } from '@/config/profileOptions'
@@ -38,6 +39,7 @@ export async function explainMeal(
   const conditions = await getConditionIdsForUser(profile.userId)
   const reasons = extractReasons(meal.explanation)
   const ruleNotes = extractRuleNotes(meal.explanation)
+  const plate = analyzePlateBalance(food, meal.mealType as MealType)
 
   return getAiAdapter().explainRecommendation({
     foodName: food.name,
@@ -49,6 +51,9 @@ export async function explainMeal(
     conditions,
     regionStateCode: profile.stateCode,
     season: currentSeason(),
+    platePartSummaries: plate.partSummaries,
+    balanceVerdict: plate.balanceVerdict,
+    gapRecommendations: plate.gapRecommendations,
   })
 }
 

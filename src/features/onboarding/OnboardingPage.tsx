@@ -184,7 +184,7 @@ export function OnboardingPage({ onComplete }: OnboardingPageProps) {
                 ))}
               </TextSelect>
             </Field>
-            <Field label="District">
+            <Field label={`District (${districts.length})`}>
               <TextSelect
                 value={districtId}
                 onChange={(e) => setDistrictId(e.target.value)}

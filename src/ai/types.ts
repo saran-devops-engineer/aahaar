@@ -15,6 +15,12 @@ export interface AiExplainRequest {
   conditions: MedicalConditionId[]
   regionStateCode: string
   season: string
+  /** What each part of the plate contributes (engine facts). */
+  platePartSummaries: string[]
+  /** Why the combination is / isn't balanced. */
+  balanceVerdict: string
+  /** Concrete add-ons when the plate is incomplete. */
+  gapRecommendations: string[]
 }
 
 export interface AiSubstitutionCandidate {

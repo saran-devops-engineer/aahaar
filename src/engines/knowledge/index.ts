@@ -1,5 +1,4 @@
 import { db } from '@/database/db'
-import { syncKnowledgeBase, FOOD_CATALOG_VERSION } from '@/engines/knowledge/catalog'
 import type {
   CostTier,
   District,
@@ -9,7 +8,7 @@ import type {
   Season,
 } from '@/types/domain'
 
-export { syncKnowledgeBase, FOOD_CATALOG_VERSION }
+export { syncKnowledgeBase, FOOD_CATALOG_VERSION } from '@/engines/knowledge/catalog'
 export { FOOD_CATALOG } from '@/engines/knowledge/data/foods'
 export { REGION_RECORDS } from '@/engines/knowledge/data/regions'
 export { DISTRICT_RECORDS } from '@/engines/knowledge/data/districts'

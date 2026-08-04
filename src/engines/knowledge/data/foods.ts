@@ -1,7 +1,7 @@
 import type { Food } from '@/types/domain'
 
 /** Catalog version — bump when foods change so seed upserts refresh. */
-export const FOOD_CATALOG_VERSION = 2
+export const FOOD_CATALOG_VERSION = 3
 
 function food(partial: Food): Food {
   return partial
@@ -332,7 +332,7 @@ export const FOOD_CATALOG: Food[] = [
     translations: { hi: 'मछली करी चावल', bn: 'মাছের ঝোল ভাত' },
     mealTypes: ['lunch', 'dinner'],
     stateCodes: ['WB', 'KL', 'OD', 'AS', 'GA'],
-    districtIds: ['wb-kolkata', 'kl-ernakulam', 'od-bhubaneswar'],
+    districtIds: ['wb-kolkata', 'kl-ernakulam', 'od-khordha'],
     seasons: ['all'],
     category: 'meal',
     isVeg: false,
@@ -934,7 +934,7 @@ export const FOOD_CATALOG: Food[] = [
     translations: { hi: 'भाप में पकी हिल्सा', bn: 'ভাপা ইলিশ ভাত' },
     mealTypes: ['lunch', 'dinner'],
     stateCodes: ['WB', 'AS'],
-    districtIds: ['wb-kolkata', 'as-guwahati'],
+    districtIds: ['wb-kolkata', 'as-kamrup-metro'],
     seasons: ['monsoon'],
     category: 'meal',
     isVeg: false,

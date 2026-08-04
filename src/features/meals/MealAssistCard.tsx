@@ -111,7 +111,7 @@ export function MealAssistCard({ meal, profile, compact = false }: MealAssistCar
             ? 'Writing explanation…'
             : explainQuery.data ?? 'No explanation available.'}
           <p className="mt-2 text-xs opacity-80">
-            AI phrases engine reasons — it never invents nutrition values.
+            Explains what the plate should include and what is still missing — never invents nutrition values.
           </p>
         </div>
       ) : null}

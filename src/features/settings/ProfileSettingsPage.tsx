@@ -136,7 +136,7 @@ export function ProfileSettingsPage({ profile, onSaved }: ProfileSettingsPagePro
           </TextSelect>
         </Field>
 
-        <Field label="District">
+        <Field label={`District (${districts.length})`}>
           <TextSelect
             value={districtId}
             onChange={(e) => setDistrictId(e.target.value)}

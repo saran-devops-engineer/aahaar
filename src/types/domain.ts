@@ -44,6 +44,17 @@ export interface NutrientProfile {
   glycemicLoad?: number
 }
 
+/** Role a plate part plays toward a balanced Indian meal. */
+export type PlateRole = 'carb' | 'protein' | 'vegetable' | 'dairy' | 'fat' | 'fruit'
+
+/** Named component of a meal (not a recipe — what the plate should include). */
+export interface PlatePart {
+  name: string
+  roles: PlateRole[]
+  /** Soft add-on; counted as a recommendation if its roles are otherwise missing. */
+  optional?: boolean
+}
+
 export interface User {
   id: string
   createdAt: string

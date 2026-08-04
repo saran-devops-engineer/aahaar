@@ -12,12 +12,24 @@ export const localAiAdapter: AiAdapter = {
       `${request.foodName} is today's ${request.mealType} pick`,
     ])
 
+    const composition =
+      request.platePartSummaries.length > 0
+        ? ` On the plate: ${request.platePartSummaries.join('; ')}.`
+        : ''
+
+    const balance = ` ${request.balanceVerdict}`
+
+    const gaps =
+      request.gapRecommendations.length > 0
+        ? ` Missing pieces: ${request.gapRecommendations.join(' ')}`
+        : ''
+
     const why =
       request.reasons.length > 0
-        ? request.reasons.slice(0, 3).join(' · ')
-        : 'it balances your targets without fighting your constraints'
+        ? ` Also chosen because ${request.reasons.slice(0, 3).join(' · ').toLowerCase()}.`
+        : ''
 
-    const calories = `${Math.round(request.calories * request.servings)} kcal at ${request.servings}× serving`
+    const calories = ` ${Math.round(request.calories * request.servings)} kcal at ${request.servings}× serving.`
     const region = request.regionStateCode
       ? ` Tuned for ${request.regionStateCode} in ${request.season}.`
       : ''
@@ -32,7 +44,7 @@ export const localAiAdapter: AiAdapter = {
         ? ` Rules note: ${request.ruleNotes[0]}.`
         : ''
 
-    return `${lead}: ${why}. ${calories}.${region}${conditions}${rules}`
+    return `${lead}.${composition}${balance}${gaps}${why}${calories}${region}${conditions}${rules}`
   },
 
   async rankSubstitutions(request) {
